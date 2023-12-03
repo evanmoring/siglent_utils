@@ -125,22 +125,20 @@ def convert_to_dBV(a):
     a = 20* a
     return a
 
-filename = "/home/evan/amp_measurements/17W.csv"
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-                    prog='ProgramName',
-                    description='What the program does',
-                    epilog='Text at the bottom of help')
+                    prog='Siglent Utilities',
+                    description='Helper functions for the Siglent SDS 1202X-E oscilloscope',
+                    epilog='Example command: \'python3 siglent_utils.py -f SDS00001.csv -s SDS00001.xml -t\'')
 
     parser.add_argument('--filename', '-f', help = "filename of csv")
     parser.add_argument('--setup', '-s', required = False, help = "filename of xml setup file. Useful for getting probe attenuation factor")
     parser.add_argument('--display_fft', action = "store_true")
     parser.add_argument('--display_wave', action = "store_true")
-    parser.add_argument('--power', '-p', type = float)
-    parser.add_argument('--rms', '-r', action = "store_true")
+    parser.add_argument('--power', '-p', type = float, help = "RMW watts. Takes the load as an argument")
+    parser.add_argument('--voltage', '-v', action = "store_true", help = "RMS voltage")
     parser.add_argument('--thd', '-t', action = "store_true", help = "actually total harmonic distortion + noise")
-    parser.add_argument('--probe_factor', '-pf', type = float)
+    parser.add_argument('--probe_factor', '-pf', type = float, help = "probe attenuation factor")
 
     args = parser.parse_args()
     if args.probe_factor:
@@ -156,7 +154,7 @@ if __name__ == "__main__":
         hamming = get_hamming_fft(l)
         print(f"THD: {get_THD(hamming): .2f}%")
 
-    if args.rms:
+    if args.voltage:
         v = get_rms(l["v"])
         print(f"RMS volts: {v: .4f}")
 
@@ -170,10 +168,3 @@ if __name__ == "__main__":
 
     if args.display_wave:
         plot_wave(l)
-
-
-        
-        
-
-
-
